@@ -1,6 +1,9 @@
 ---
-title: "Recognition of the NMIST handwritten digit dataset using convolutional neural networks"
-output: html_notebook
+title: Recognition of the NMIST handwritten digit dataset using convolutional neural
+  networks
+output:
+  html_document:
+    df_print: paged
 ---
 
 The original data can be downloaded from [NMIST](http://yann.lecun.com/exdb/mnist/).
@@ -109,3 +112,31 @@ network %>% fit(train_images,train_labels, epochs = 5, batch_size =128)
 ```
 
 
+The plot generated during training shows how the learning progresses as the epochs go.
+```{r echo=FALSE, out.width='50%'}
+library(knitr)
+knitr::include_graphics('img/Rplot.png')
+```
+
+
+
+### Evaluation
+
+The metrics used are loss and accuracy.
+
+```{r}
+metrics <- network %>% evaluate(test_images, test_labels)
+metrics
+```
+
+Predict the classes for the first ten samples in the test set.
+
+```{r}
+predicted_labels <- network %>% predict_classes(test_images[1:10,])
+true_labels <- apply(test_labels[1:10,], MARGIN = 1, FUN = function(x) {c(0,1,2,3,4,5,6,7,8,9)[x == 1]})
+m <- matrix(c(true_labels,predicted_labels),ncol = 2, byrow = FALSE)
+colnames(m) <- c("true", "predicted")
+rownames(m) <- seq(10)
+m <- as.table(m)
+m
+```
