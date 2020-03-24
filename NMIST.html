@@ -1708,10 +1708,29 @@ test_labels &lt;- to_categorical(test_labels)</code></pre>
 <pre class="r"><code>metrics &lt;- network %&gt;% evaluate(test_images, test_labels)
 metrics</code></pre>
 <pre><code>## $loss
-## [1] 0.06703927
+## [1] 0.06807467
 ## 
 ## $accuracy
-## [1] 0.9802</code></pre>
+## [1] 0.9801</code></pre>
+<p>Predict the classes for the first ten samples in the test set.</p>
+<pre class="r"><code>predicted_labels &lt;- network %&gt;% predict_classes(test_images[1:10,])
+true_labels &lt;- apply(test_labels[1:10,], MARGIN = 1, FUN = function(x) {c(0,1,2,3,4,5,6,7,8,9)[x == 1]})
+m &lt;- matrix(c(true_labels,predicted_labels),ncol = 2, byrow = FALSE)
+colnames(m) &lt;- c(&quot;true&quot;, &quot;predicted&quot;)
+rownames(m) &lt;- seq(10)
+m &lt;- as.table(m)
+m</code></pre>
+<pre><code>##    true predicted
+## 1     7         7
+## 2     2         2
+## 3     1         1
+## 4     0         0
+## 5     4         4
+## 6     1         1
+## 7     4         4
+## 8     9         9
+## 9     5         5
+## 10    9         9</code></pre>
 </div>
 </div>
 
