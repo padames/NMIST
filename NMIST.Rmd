@@ -1,9 +1,7 @@
 ---
 title: Recognition of the NMIST handwritten digit dataset using convolutional neural
   networks
-output:
-  html_document:
-    df_print: paged
+output: html_notebook
 ---
 
 The original data can be downloaded from [NMIST](http://yann.lecun.com/exdb/mnist/).
@@ -107,7 +105,7 @@ test_labels <- to_categorical(test_labels)
 
 The network is ready to learn from the training data.
 
-```{r}
+```{r echo=TRUE}
 network %>% fit(train_images,train_labels, epochs = 5, batch_size =128)
 ```
 
