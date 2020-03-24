@@ -1,0 +1,37 @@
+---
+title: "Recognition of the NMIST handwritten digit dataset using convolutional neural networks"
+output: html_notebook
+---
+
+The original data can be downloaded from [NMIST](http://yann.lecun.com/exdb/mnist/).
+The current notebook uses the data set from the package *Keras*.
+
+
+<!-- Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.  -->
+
+<!-- Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*. -->
+
+<!-- When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file). -->
+
+<!-- The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed. -->
+
+
+Let's follow the example on Chapter 2 of Deep Learning with R, 2018, by Francois Collete and J.J. Altaire.
+
+
+```{r}
+library(keras)
+mnist <- dataset_mnist()
+train_images <- mnist$train$x
+train_labels <- mnist$train$y
+test_images <- mnist$test$x
+test_labels <- mnist$test$y
+```
+
+Let's explore the data set a bit.
+
+```{r}
+str(train_images)
+```
+
+
