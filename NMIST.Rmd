@@ -55,6 +55,57 @@ The tes labels in a 1d tensor of intengers of dimensions 10000 x 1.
 
 First the training data will be fed to the neural network. Then it will learn to associate an image with a label. Finally thye neural network will be asked to predict the labels for the test images, and a verification of how well the prediction is will be made.
 
+### The network architecture
 
+```{r}
+network <- keras_model_sequential() %>% 
+  layer_dense(units = 512, activation = "relu", input_shape = c(28*28)) %>%
+  layer_dense(units = 10, activation = "softmax")
+```
+
+The layers are chained one after the next via the _pipe_ operator `%>%`. The represent a data sieve that produces more refined output as it apporaches the final output layer.
+
+### The compilation step
+
+```{r}
+network %>% compile(
+  optimizer = "rmsprop",
+  loss = "categorical_crossentropy",
+  metrics = c("accuracy")
+)
+```
+
+The `keras` function `compile` modifies the `network` in place instead of returning a new object.
+
+Before training the data has to be reshaped in preparation for the engine to consume it.
+
+```{r}
+train_images <- array_reshape(train_images, c(60000, 28*28))
+train_images <- train_images / 255 # the values in the 28 x 28 matrix are one of 256 bits
+str(train_images)
+```
+Now the training images consist of 47,040,000 elements in a 2d tensor of numbers of 60000 x 784.
+Similarly for the testing data.
+
+```{r}
+test_images <- array_reshape(test_images, c(10000, 28*28))
+test_images <- test_images / 255 # the values in the 28 x 28 matrix are one of 256 bits
+str(test_images)
+```
+
+Now the test images consist of 7,840,000 elements in a 2d tensor of numbers of 10000 x 784.
+
+```{r}
+train_labels <- to_categorical(train_labels) # Converts a class vector (integers) to binary class matrix. 
+test_labels <- to_categorical(test_labels)
+```
+
+### The training step
+
+The network is ready to learn from the training data.
+
+```{r}
+network %>% fit(train_images,train_labels, epochs = 5, batch_size =128)
+```
 
 
