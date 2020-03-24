@@ -28,10 +28,33 @@ test_images <- mnist$test$x
 test_labels <- mnist$test$y
 ```
 
-Let's explore the data set a bit.
+## Data exploration
+
+Let's look at the tensors in the data set. First the training data:
 
 ```{r}
 str(train_images)
+str(train_labels)
 ```
+
+The images are stored in a 3d tensor of integers of dimensions 60000 x 28 x 28.
+The labels in a 1d tensor of intengers of dimensions 60000 x 1 containing the digits the respective image represents.
+
+And then the test data:
+
+```{r}
+str(test_images)
+str(test_labels)
+```
+
+The test images are stored in a 3d tensor of integers of dimensions 10000 x 28 x 28.
+The tes labels in a 1d tensor of intengers of dimensions 10000 x 1.
+
+
+## Workflow
+
+First the training data will be fed to the neural network. Then it will learn to associate an image with a label. Finally thye neural network will be asked to predict the labels for the test images, and a verification of how well the prediction is will be made.
+
+
 
 

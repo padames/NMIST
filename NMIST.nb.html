@@ -1767,7 +1767,9 @@ test_labels &lt;- mnist$test$y</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Let’s explore the data set a bit.</p>
+<div id="data-exploration" class="section level2">
+<h2>Data exploration</h2>
+<p>Let’s look at the tensors in the data set. First the training data:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKHRyYWluX2ltYWdlcylcbmBgYCJ9 -->
@@ -1776,11 +1778,41 @@ test_labels &lt;- mnist$test$y</code></pre>
 <!-- rnb-output-begin eyJkYXRhIjoiIGludCBbMTo2MDAwMCwgMToyOCwgMToyOF0gMCAwIDAgMCAwIDAgMCAwIDAgMCAuLi5cbiJ9 -->
 <pre><code> int [1:60000, 1:28, 1:28] 0 0 0 0 0 0 0 0 0 0 ...</code></pre>
 <!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKHRyYWluX2xhYmVscylcbmBgYCJ9 -->
+<pre class="r"><code>str(train_labels)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIGludCBbMTo2MDAwMCgxZCldIDUgMCA0IDEgOSAyIDEgMyAxIDQgLi4uXG4ifQ== -->
+<pre><code> int [1:60000(1d)] 5 0 4 1 9 2 1 3 1 4 ...</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>The images are stored in a 3d tensor of integers of dimensions 60000 x 28 x 28. The labels in a 1d tensor of intengers of dimensions 60000 x 1 containing the digits the respective image represents.</p>
+<p>And then the test data:</p>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKHRlc3RfaW1hZ2VzKVxuYGBgIn0= -->
+<pre class="r"><code>str(test_images)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIGludCBbMToxMDAwMCwgMToyOCwgMToyOF0gMCAwIDAgMCAwIDAgMCAwIDAgMCAuLi5cbiJ9 -->
+<pre><code> int [1:10000, 1:28, 1:28] 0 0 0 0 0 0 0 0 0 0 ...</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKHRlc3RfbGFiZWxzKVxuYGBgIn0= -->
+<pre class="r"><code>str(test_labels)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIGludCBbMToxMDAwMCgxZCldIDcgMiAxIDAgNCAxIDQgOSA1IDkgLi4uXG4ifQ== -->
+<pre><code> int [1:10000(1d)] 7 2 1 0 4 1 4 9 5 9 ...</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The test images are stored in a 3d tensor of integers of dimensions 10000 x 28 x 28. The tes labels in a 1d tensor of intengers of dimensions 10000 x 1.</p>
+</div>
+<div id="workflow" class="section level2">
+<h2>Workflow</h2>
+<p>First the training data will be fed to the neural network. Then it will learn to associate an image with a label. Finally thye neural network will be asked to predict the labels for the test images, and a verification of how well the prediction is will be made.</p>
+<!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVjb2duaXRpb24gb2YgdGhlIE5NSVNUIGhhbmR3cml0dGVuIGRpZ2l0IGRhdGFzZXQgdXNpbmcgY29udm9sdXRpb25hbCBuZXVyYWwgbmV0d29ya3MiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KClRoZSBvcmlnaW5hbCBkYXRhIGNhbiBiZSBkb3dubG9hZGVkIGZyb20gW05NSVNUXShodHRwOi8veWFubi5sZWN1bi5jb20vZXhkYi9tbmlzdC8pLgpUaGUgY3VycmVudCBub3RlYm9vayB1c2VzIHRoZSBkYXRhIHNldCBmcm9tIHRoZSBwYWNrYWdlICpLZXJhcyouCgoKPCEtLSBUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouICAtLT4KCjwhLS0gQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkN0cmwrQWx0K0kqLiAtLT4KCjwhLS0gV2hlbiB5b3Ugc2F2ZSB0aGUgbm90ZWJvb2ssIGFuIEhUTUwgZmlsZSBjb250YWluaW5nIHRoZSBjb2RlIGFuZCBvdXRwdXQgd2lsbCBiZSBzYXZlZCBhbG9uZ3NpZGUgaXQgKGNsaWNrIHRoZSAqUHJldmlldyogYnV0dG9uIG9yIHByZXNzICpDdHJsK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuIC0tPgoKPCEtLSBUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuIC0tPgoKCkxldCdzIGZvbGxvdyB0aGUgZXhhbXBsZSBvbiBDaGFwdGVyIDIgb2YgRGVlcCBMZWFybmluZyB3aXRoIFIsIDIwMTgsIGJ5IEZyYW5jb2lzIENvbGxldGUgYW5kIEouSi4gQWx0YWlyZS4KCgpgYGB7cn0KbGlicmFyeShrZXJhcykKbW5pc3QgPC0gZGF0YXNldF9tbmlzdCgpCnRyYWluX2ltYWdlcyA8LSBtbmlzdCR0cmFpbiR4CnRyYWluX2xhYmVscyA8LSBtbmlzdCR0cmFpbiR5CnRlc3RfaW1hZ2VzIDwtIG1uaXN0JHRlc3QkeAp0ZXN0X2xhYmVscyA8LSBtbmlzdCR0ZXN0JHkKYGBgCgpMZXQncyBleHBsb3JlIHRoZSBkYXRhIHNldCBhIGJpdC4KCmBgYHtyfQpzdHIodHJhaW5faW1hZ2VzKQpgYGAKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVjb2duaXRpb24gb2YgdGhlIE5NSVNUIGhhbmR3cml0dGVuIGRpZ2l0IGRhdGFzZXQgdXNpbmcgY29udm9sdXRpb25hbCBuZXVyYWwgbmV0d29ya3MiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KClRoZSBvcmlnaW5hbCBkYXRhIGNhbiBiZSBkb3dubG9hZGVkIGZyb20gW05NSVNUXShodHRwOi8veWFubi5sZWN1bi5jb20vZXhkYi9tbmlzdC8pLgpUaGUgY3VycmVudCBub3RlYm9vayB1c2VzIHRoZSBkYXRhIHNldCBmcm9tIHRoZSBwYWNrYWdlICpLZXJhcyouCgoKPCEtLSBUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouICAtLT4KCjwhLS0gQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkN0cmwrQWx0K0kqLiAtLT4KCjwhLS0gV2hlbiB5b3Ugc2F2ZSB0aGUgbm90ZWJvb2ssIGFuIEhUTUwgZmlsZSBjb250YWluaW5nIHRoZSBjb2RlIGFuZCBvdXRwdXQgd2lsbCBiZSBzYXZlZCBhbG9uZ3NpZGUgaXQgKGNsaWNrIHRoZSAqUHJldmlldyogYnV0dG9uIG9yIHByZXNzICpDdHJsK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuIC0tPgoKPCEtLSBUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuIC0tPgoKCkxldCdzIGZvbGxvdyB0aGUgZXhhbXBsZSBvbiBDaGFwdGVyIDIgb2YgRGVlcCBMZWFybmluZyB3aXRoIFIsIDIwMTgsIGJ5IEZyYW5jb2lzIENvbGxldGUgYW5kIEouSi4gQWx0YWlyZS4KCgpgYGB7cn0KbGlicmFyeShrZXJhcykKbW5pc3QgPC0gZGF0YXNldF9tbmlzdCgpCnRyYWluX2ltYWdlcyA8LSBtbmlzdCR0cmFpbiR4CnRyYWluX2xhYmVscyA8LSBtbmlzdCR0cmFpbiR5CnRlc3RfaW1hZ2VzIDwtIG1uaXN0JHRlc3QkeAp0ZXN0X2xhYmVscyA8LSBtbmlzdCR0ZXN0JHkKYGBgCgojIyBEYXRhIGV4cGxvcmF0aW9uCgpMZXQncyBsb29rIGF0IHRoZSB0ZW5zb3JzIGluIHRoZSBkYXRhIHNldC4gRmlyc3QgdGhlIHRyYWluaW5nIGRhdGE6CgpgYGB7cn0Kc3RyKHRyYWluX2ltYWdlcykKc3RyKHRyYWluX2xhYmVscykKYGBgCgpUaGUgaW1hZ2VzIGFyZSBzdG9yZWQgaW4gYSAzZCB0ZW5zb3Igb2YgaW50ZWdlcnMgb2YgZGltZW5zaW9ucyA2MDAwMCB4IDI4IHggMjguClRoZSBsYWJlbHMgaW4gYSAxZCB0ZW5zb3Igb2YgaW50ZW5nZXJzIG9mIGRpbWVuc2lvbnMgNjAwMDAgeCAxIGNvbnRhaW5pbmcgdGhlIGRpZ2l0cyB0aGUgcmVzcGVjdGl2ZSBpbWFnZSByZXByZXNlbnRzLgoKQW5kIHRoZW4gdGhlIHRlc3QgZGF0YToKCmBgYHtyfQpzdHIodGVzdF9pbWFnZXMpCnN0cih0ZXN0X2xhYmVscykKYGBgCgpUaGUgdGVzdCBpbWFnZXMgYXJlIHN0b3JlZCBpbiBhIDNkIHRlbnNvciBvZiBpbnRlZ2VycyBvZiBkaW1lbnNpb25zIDEwMDAwIHggMjggeCAyOC4KVGhlIHRlcyBsYWJlbHMgaW4gYSAxZCB0ZW5zb3Igb2YgaW50ZW5nZXJzIG9mIGRpbWVuc2lvbnMgMTAwMDAgeCAxLgoKCiMjIFdvcmtmbG93CgpGaXJzdCB0aGUgdHJhaW5pbmcgZGF0YSB3aWxsIGJlIGZlZCB0byB0aGUgbmV1cmFsIG5ldHdvcmsuIFRoZW4gaXQgd2lsbCBsZWFybiB0byBhc3NvY2lhdGUgYW4gaW1hZ2Ugd2l0aCBhIGxhYmVsLiBGaW5hbGx5IHRoeWUgbmV1cmFsIG5ldHdvcmsgd2lsbCBiZSBhc2tlZCB0byBwcmVkaWN0IHRoZSBsYWJlbHMgZm9yIHRoZSB0ZXN0IGltYWdlcywgYW5kIGEgdmVyaWZpY2F0aW9uIG9mIGhvdyB3ZWxsIHRoZSBwcmVkaWN0aW9uIGlzIHdpbGwgYmUgbWFkZS4KCgoKCg==</div>
 
 
 
